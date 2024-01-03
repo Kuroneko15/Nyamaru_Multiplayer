@@ -11,11 +11,16 @@ Lựa chọn thay thế để quản lý slots người chơi ra/vào server. T�
 	3. [l4dafkfix_deadbot](https://forums.alliedmods.net/showpost.php?p=2772050&postcount=54) đã được bao gồm.
 	3. [l4d2_rescue_vehicle_mover](https://forums.alliedmods.net/showpost.php?p=2771588&postcount=53) đã được bao gồm.
 
-* <details><summary>Changelog | 版本日誌</summary>
+* <details><summary>Lịch sử cập nhật:</summary>
 
     * v1.0 (03-01-2024)
         * Ra mắt plugin.
 
 </details>
+# Danh sách số tùy chọn vũ khí trong cfg:
+* Vũ khí chính [Slots 0]
+	* 1 - SMG Uzi
+	* 2 - SMG Mp5
+
 
 
