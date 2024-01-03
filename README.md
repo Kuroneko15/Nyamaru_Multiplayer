@@ -18,61 +18,7 @@ Lựa chọn thay thế để quản lý slots người chơi ra/vào server. T�
 
 </details>
 
-# Danh sách số tùy chỉnh vũ khí trong cfg:
-* <details><summary>Vũ khí chính [Slots 0]</summary>
-	* 1 - SMG Uzi <br/>
-	* 2 - SMG Mp5 <br/>
-	* 4 - SMG Selenced <br/>
-	* 8 - Pumps Shotgun <br/>
-	* 8 - Chrome Shotgun <br/>
-	* 16 - Pumps Shotgun <br/>
-	* 32 - Rifle M16 <br/>
-	* 64 - Rifle Desert <br/>
-	* 128 - Rifle Ak47 <br/>
-	* 256 - Rifle SG552 <br/>
-	* 512 - Autoshotgun <br/>
-	* 1024 - Spass Shotgun <br/>
-	* 2048 - Hunting Rifle <br/>
-	* 4096 - Sniper Military <br/>
-	* 8192 - Sniper Scout <br/>
-	* 16384 - Sniper AWP <br/>
-	* 32768 - Machine Gun M60 <br/>
-	* 65536 - Grenade Launcher <br/>
-	* 1560 - Random Shotgun <br/>
-	* 30720 - Random Sniper <br/>
-	* 31 - Random Tier 1 <br/>
-	* 32736 - Random Tier 2 <br/>
-	* 98304 - Random Tier 0 <br/>
-</details>
-
-# Danh sách số tùy chỉnh vũ khí trong cfg:
-* <details><summary>Vũ khí chính [Slots 0]</summary>
-	* 1 - SMG Uzi <br/>
-	* 2 - SMG Mp5 <br/>
-	* 4 - SMG Selenced <br/>
-	* 8 - Pumps Shotgun <br/>
-	* 8 - Chrome Shotgun <br/>
-	* 16 - Pumps Shotgun <br/>
-	* 32 - Rifle M16 <br/>
-	* 64 - Rifle Desert <br/>
-	* 128 - Rifle Ak47 <br/>
-	* 256 - Rifle SG552 <br/>
-	* 512 - Autoshotgun <br/>
-	* 1024 - Spass Shotgun <br/>
-	* 2048 - Hunting Rifle <br/>
-	* 4096 - Sniper Military <br/>
-	* 8192 - Sniper Scout <br/>
-	* 16384 - Sniper AWP <br/>
-	* 32768 - Machine Gun M60 <br/>
-	* 65536 - Grenade Launcher <br/>
-	* 1560 - Random Shotgun <br/>
-	* 30720 - Random Sniper <br/>
-	* 31 - Random Tier 1 <br/>
-	* 32736 - Random Tier 2 <br/>
-	* 98304 - Random Tier 0 <br/>
-</details>
-
-# Danh sách số tùy chỉnh vũ khí trong cfg:
+## Danh sách số tùy chỉnh vũ khí trong cfg:
 * <details><summary>Vũ khí chính [Slots 0]</summary>
 	* 1 - SMG Uzi <br/>
 	* 2 - SMG Mp5 <br/>
