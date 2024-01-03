@@ -17,10 +17,127 @@ Lựa chọn thay thế để quản lý slots người chơi ra/vào server. T�
         * Ra mắt plugin.
 
 </details>
-# Danh sách số tùy chọn vũ khí trong cfg:
-* Vũ khí chính [Slots 0]
-	* 1 - SMG Uzi
-	* 2 - SMG Mp5
+
+# Danh sách số tùy chỉnh vũ khí trong cfg:
+* <details><summary>Vũ khí chính [Slots 0]</summary>
+	* 1 - SMG Uzi <br/>
+	* 2 - SMG Mp5 <br/>
+	* 4 - SMG Selenced <br/>
+	* 8 - Pumps Shotgun <br/>
+	* 8 - Chrome Shotgun <br/>
+	* 16 - Pumps Shotgun <br/>
+	* 32 - Rifle M16 <br/>
+	* 64 - Rifle Desert <br/>
+	* 128 - Rifle Ak47 <br/>
+	* 256 - Rifle SG552 <br/>
+	* 512 - Autoshotgun <br/>
+	* 1024 - Spass Shotgun <br/>
+	* 2048 - Hunting Rifle <br/>
+	* 4096 - Sniper Military <br/>
+	* 8192 - Sniper Scout <br/>
+	* 16384 - Sniper AWP <br/>
+	* 32768 - Machine Gun M60 <br/>
+	* 65536 - Grenade Launcher <br/>
+	* 1560 - Random Shotgun <br/>
+	* 30720 - Random Sniper <br/>
+	* 31 - Random Tier 1 <br/>
+	* 32736 - Random Tier 2 <br/>
+	* 98304 - Random Tier 0 <br/>
+</details>
+
+# Danh sách số tùy chỉnh vũ khí trong cfg:
+* <details><summary>Vũ khí chính [Slots 0]</summary>
+	* 1 - SMG Uzi <br/>
+	* 2 - SMG Mp5 <br/>
+	* 4 - SMG Selenced <br/>
+	* 8 - Pumps Shotgun <br/>
+	* 8 - Chrome Shotgun <br/>
+	* 16 - Pumps Shotgun <br/>
+	* 32 - Rifle M16 <br/>
+	* 64 - Rifle Desert <br/>
+	* 128 - Rifle Ak47 <br/>
+	* 256 - Rifle SG552 <br/>
+	* 512 - Autoshotgun <br/>
+	* 1024 - Spass Shotgun <br/>
+	* 2048 - Hunting Rifle <br/>
+	* 4096 - Sniper Military <br/>
+	* 8192 - Sniper Scout <br/>
+	* 16384 - Sniper AWP <br/>
+	* 32768 - Machine Gun M60 <br/>
+	* 65536 - Grenade Launcher <br/>
+	* 1560 - Random Shotgun <br/>
+	* 30720 - Random Sniper <br/>
+	* 31 - Random Tier 1 <br/>
+	* 32736 - Random Tier 2 <br/>
+	* 98304 - Random Tier 0 <br/>
+</details>
+
+# Danh sách số tùy chỉnh vũ khí trong cfg:
+* <details><summary>Vũ khí chính [Slots 0]</summary>
+	* 1 - SMG Uzi <br/>
+	* 2 - SMG Mp5 <br/>
+	* 4 - SMG Selenced <br/>
+	* 8 - Pumps Shotgun <br/>
+	* 8 - Chrome Shotgun <br/>
+	* 16 - Pumps Shotgun <br/>
+	* 32 - Rifle M16 <br/>
+	* 64 - Rifle Desert <br/>
+	* 128 - Rifle Ak47 <br/>
+	* 256 - Rifle SG552 <br/>
+	* 512 - Autoshotgun <br/>
+	* 1024 - Spass Shotgun <br/>
+	* 2048 - Hunting Rifle <br/>
+	* 4096 - Sniper Military <br/>
+	* 8192 - Sniper Scout <br/>
+	* 16384 - Sniper AWP <br/>
+	* 32768 - Machine Gun M60 <br/>
+	* 65536 - Grenade Launcher <br/>
+	* 1560 - Random Only Shotgun <br/>
+	* 30720 - Random Only Sniper <br/>
+	* 31 - Random Tier 1 <br/>
+	* 32736 - Random Tier 2 <br/>
+	* 98304 - Random Tier 0 <br/>
+</details>
+
+* <details><summary>Vũ khí thứ 2 [Slots 1]</summary>
+	* 1 - Pistol <br/>
+	* 2 - Magnum <br/>
+	* 4 - Chainsaw <br/>
+	* 8 - Fireaxe <br/>
+	* 16 - Frying Pan <br/>
+	* 32 - Machete <br/>
+	* 64 - Baseball Bat <br/>
+	* 128 - Crowbar <br/>
+	* 256 - Cricket Bat <br/>
+	* 512 - Tonfa <br/>
+	* 1024 - Katana <br/>
+	* 2048 - Electric guitar <br/>
+	* 4096 - Knife <br/>
+	* 8192 - Golfclub <br/>
+	* 16384 - Shovel <br/>
+	* 32768 - Pitchfork <br/>
+	* 65536 - Riot Shield <br/>
+	* 131071 - Random All <br/>
+</details>
+
+* <details><summary>Vật phẩm thứ 3 [Slots 2]</summary>
+	* 1 - Molotov <br/>
+	* 2 - Pipe bomb <br/>
+	* 4 - Vomitjar <br/>
+	* 4 - Random All <br/>
+</details>
 
 
+* <details><summary>Vật phẩm thứ 4 [Slots 3]</summary>
+	* 1 - First Aid Kit <br/>
+	* 2 - Defibrillator <br/>
+	* 4 - Incendiary Ammo Pack <br/>
+	* 8 - Explosive Ammo Pack <br/>
+	* 15 - Random All <br/>
+</details>
 
+* <details><summary>Vật phẩm thứ 5 [Slots 4]</summary>
+	* 1 - Pain Pills <br/>
+	* 2 - Adrenaline <br/>
+	* 3 - Random All <br/>
+</details>
