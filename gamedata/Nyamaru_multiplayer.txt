@@ -126,17 +126,20 @@
 				"windows"	"16300"
 			}
 
+
 			"m_hHiddenWeapon"
 			{
 				"linux"		"16288"
 				"windows"	"16308"
 			}
 
+
 			"m_isOutOfCheckpoint"
 			{
 				"linux"		"14820"
 				"windows"	"14840"
 			}
+
 
 			"RestartScenarioTimer"
 			{

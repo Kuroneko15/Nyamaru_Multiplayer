@@ -1,9 +1,9 @@
 # Giới thiệu tổng quan
 Lựa chọn thay thế để quản lý slots người chơi ra/vào server. Tất cả trong 1.
-
-* Cần thiết cài đặt để bổ sung và khởi chạy:
-	1. [Left4dhooks](https://forums.alliedmods.net/showthread.php?t=321696) thư viện include.
-	2. [Defib_Fix](https://forums.alliedmods.net/showthread.php?p=2647018) sửa lỗi khi sốc điện người chơi.
+- - - -
+## Cần thiết cài đặt để bổ sung và khởi chạy:
+	* [Left4dhooks](https://forums.alliedmods.net/showthread.php?t=321696) thư viện include.
+	* [Defib_Fix](https://forums.alliedmods.net/showthread.php?p=2647018) sửa lỗi khi sốc điện người chơi.
 
 * Loại bỏ các plugins sau để tránh xung đột:
 	1. [Survivor_AFK_Fix](https://forums.alliedmods.net/showthread.php?p=2714236) đã được bao gồm.
@@ -12,9 +12,11 @@ Lựa chọn thay thế để quản lý slots người chơi ra/vào server. T�
 	3. [l4d2_rescue_vehicle_mover](https://forums.alliedmods.net/showpost.php?p=2771588&postcount=53) đã được bao gồm.
 
 * <details><summary>Lịch sử cập nhật:</summary>
-
-    * v1.0 (03-01-2024)
-        * Ra mắt plugin.
+* v1.1 (11-02-2024)<br/>
+	- Update code mới.<br/>
+	- Sửa vài lỗi gây văng game do game update mới. (Luna report)<br/>	
+* v1.0 (03-01-2024)<br/>
+	- Ra mắt plugin.
 
 </details>
 
