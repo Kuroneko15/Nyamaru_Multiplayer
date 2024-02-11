@@ -1,5 +1,14 @@
-* Giới thiệu tổng quan
-Lựa chọn thay thế để quản lý slots người chơi ra/vào server. Tất cả trong 1.
+* Giới thiệu tổng quan:<br/>
+	* Plugin dùng để quản lý bot cho local server.
+- - - -
+* <details>Command cơ bản sử dụng trong plugin::<br/>
+	* **!join (tham gia game)**
+	* **!afk (idle treo máy)**
+	* **!spec (sang chế độ spectator)**
+	* **!takebot (chiếm quyền điều khiển bot)**
+	* **!kill (tự kết liễu, chỉ hoạt động khi incap)**
+	* **!teams (thông tin người chơi)**
+	* **!info (thông tin phòng host)**
 - - - -
 * Cần thiết cài đặt để bổ sung và khởi chạy:<br/>
 	* [Left4dhooks](https://forums.alliedmods.net/showthread.php?t=321696) thư viện include.<br/>
