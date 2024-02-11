@@ -1,9 +1,9 @@
 # Giới thiệu tổng quan
 Lựa chọn thay thế để quản lý slots người chơi ra/vào server. Tất cả trong 1.
 - - - -
-## Cần thiết cài đặt để bổ sung và khởi chạy:
-	* [Left4dhooks](https://forums.alliedmods.net/showthread.php?t=321696) thư viện include.
-	* [Defib_Fix](https://forums.alliedmods.net/showthread.php?p=2647018) sửa lỗi khi sốc điện người chơi.
+## Cần thiết cài đặt để bổ sung và khởi chạy:<br/>
+	* [Left4dhooks](https://forums.alliedmods.net/showthread.php?t=321696) thư viện include.<br/>
+	* [Defib_Fix](https://forums.alliedmods.net/showthread.php?p=2647018) sửa lỗi khi sốc điện người chơi.<br/>
 
 * Loại bỏ các plugins sau để tránh xung đột:
 	1. [Survivor_AFK_Fix](https://forums.alliedmods.net/showthread.php?p=2714236) đã được bao gồm.
