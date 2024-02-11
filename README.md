@@ -2,13 +2,13 @@
 	* Plugin dùng để quản lý bot cho local server.
 - - - -
 * <summary>Command cơ bản sử dụng trong plugin:</summary>
-	* **!join (tham gia game)**
-	* **!afk (idle treo máy)**
-	* **!spec (sang chế độ spectator)**
-	* **!takebot (chiếm quyền điều khiển bot)**
-	* **!kill (tự kết liễu, chỉ hoạt động khi incap)**
-	* **!teams (thông tin người chơi)**
-	* **!info (thông tin phòng host)**
+	* !join (tham gia game)<br/>
+	* !afk (idle treo máy)<br/>
+	* !spec (sang chế độ spectator)<br/>
+	* !takebot (chiếm quyền điều khiển bot)<br/>
+	* !kill (tự kết liễu, chỉ hoạt động khi incap)<br/>
+	* !teams (thông tin người chơi)<br/>
+	* !info (thông tin phòng host)<br/>
 - - - -
 * Cần thiết cài đặt để bổ sung và khởi chạy:<br/>
 	* [Left4dhooks](https://forums.alliedmods.net/showthread.php?t=321696) thư viện include.<br/>
