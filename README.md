@@ -1,7 +1,7 @@
 * Giới thiệu tổng quan:<br/>
 	* Plugin dùng để quản lý bot cho local server.
 - - - -
-* <details>Command cơ bản sử dụng trong plugin::<br/>
+* <summary>Command cơ bản sử dụng trong plugin:</summary>
 	* **!join (tham gia game)**
 	* **!afk (idle treo máy)**
 	* **!spec (sang chế độ spectator)**
