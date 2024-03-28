@@ -2,6 +2,8 @@
 #pragma newdecls required
 #include <sourcemod>
 #include <left4dhooks>
+#include <sdkhooks>
+#include <sdktools>
 #include <dhooks>
 
 #define TEAM_NOTEAM				0
@@ -14,6 +16,7 @@
 #define JOIN_AUTOMATIC			(1 << 1)
 
 Handle
+	g_hMedkitTimer,
 	g_hPanelTimer[MAXPLAYERS + 1],
 	g_hBotsTimer,
 	g_hSDK_NextBotCreatePlayerBot_SurvivorBot,
@@ -41,6 +44,9 @@ ConVar
 	g_cJoinFlags,
 	g_cJoinRespawn,
 	g_SuicideCommand,
+	g_cExtraFirstAid,
+	g_cFinaleExtraFirstAid,
+	g_cSurvivalExtraFirstAid,
 	g_cSpecNotify,
 	g_cGiveType,
 	g_cGiveTime,
@@ -62,6 +68,7 @@ int
 
 bool
 	g_bLateLoad,
+	g_bMedkitsGiven,
 	g_bGiveType,
 	g_bGiveTime,
 	g_bInSpawnTime,
@@ -69,6 +76,9 @@ bool
 	g_bShouldFixAFK,
 	g_bShouldIgnore,
 	g_bBlockUserMsg;
+
+char
+	gameMode[16];
 
 enum struct Weapon {
 	ConVar Flags;
@@ -283,15 +293,16 @@ static const char
 
 public Plugin myinfo = 
 {
-	name = "Nyamaru Multiplayer", 
-	author = "Nyamaru", 
-	description = "", 
-	version = "1.1", 
+	name = "L4D2 Multiplayer Release", 
+	author = "Lyeria", 
+	description = "Another version all in one of 8 slots plugin.", 
+	version = "1.2", 
 	url = "N/A"
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	MarkNativeAsOptional("L4D_LobbyUnreserve");
 	g_bLateLoad = late;
 	return APLRes_Success;
 }
@@ -305,7 +316,7 @@ public void OnPluginStart()
 
 	AddCommandListener(Listener_spec_next, "spec_next");
 	HookUserMessage(GetUserMessageId("SayText2"), umSayText2, true);
-	CreateConVar("multiplayer_version", "1.1", "Nyamaru multiplayer version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("multiplayer_version", "1.2", "l4d2 multiplayer version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	g_cBotLimit =				CreateConVar("multiplayer_default_start",			"4",		"How many survivor spawn when map start?", CVAR_FLAGS, true, 1.0, true, float(MaxClients));
 	g_cJoinLimit =				CreateConVar("multiplayer_block_limit",				"-1",		"Block survivors joining. \nFor example you have 8 slots but only 4 slots available to join. \n-1=Plugin not process.", CVAR_FLAGS, true, -1.0, true, float(MaxClients));
@@ -318,6 +329,12 @@ public void OnPluginStart()
 	g_eWeapon[2].Flags =		CreateConVar("multiplayer_default_weapon3",			"0",		"Third slot item for players. \n0=Nothing, 1=Moltov, 2=Pipe Bomb, 4=Vomitjar, 7=Random.", CVAR_FLAGS);
 	g_eWeapon[3].Flags =		CreateConVar("multiplayer_default_weapon4",			"0",		"Fourth slot item for players. \n0=Nothing, 1=Medkit, 2=Defib, 4=Incendiary Pack, 8=Explosive Pack, 15=Random.", CVAR_FLAGS);
 	g_eWeapon[4].Flags =		CreateConVar("multiplayer_default_weapon5",			"0",		"Fifth slot item for players. \n0=Nothing, 1=Pain Pills, 2=Adrenaline, 3=Random.", CVAR_FLAGS);
+
+	g_cExtraFirstAid =			CreateConVar("multiplayer_extra_first_aid",			"1",		"Allow enable function auto extra medkits for 5+ players?. \n0 = Disabled, 1 = Enabled", 0, true, 0.0, true, 1.0);
+	g_cFinaleExtraFirstAid =	CreateConVar("multiplayer_finale_extra_first_aid",	"1",		"Enable auto medkits when the rescure is activated (require allow enable function). \n0 = Disabled, 1 = Enabled)", 0, true, 0.0, true, 1.0);
+	g_cSurvivalExtraFirstAid =	CreateConVar("multiplayer_survival_extra_first_aid","1",		"Enable auto medkits in Survival 5+ players at saferoom (require allow enable function). \n0 = Disabled, 1 = Enabled)", 0, true, 0.0, true, 1.0);
+
+	g_SuicideCommand =			CreateConVar("multiplayer_kill_command",			"1",		"Enable !kill command to finish your self (only work when incapacitated).\n0 = Disabled, 1 = Enabled", CVAR_FLAGS);
 
 	g_cGiveType =				CreateConVar("multiplayer_ai_equip",				"1",		"Equipment for players? \n0 = Another plugin, 1 = Use your custom setting, 2 = Automatically calculate average equipment quality (gacha all give option).", CVAR_FLAGS);
 	g_cGiveTime =				CreateConVar("multiplayer_setup_equip",				"1",		"When to use your setup equipment for players?. \n0 = Auto equip when map start, 1 = Only equip when 5+ players join.", CVAR_FLAGS);
@@ -344,7 +361,7 @@ public void OnPluginStart()
 	g_cGiveType.AddChangeHook(CvarChanged_Weapon);
 	g_cGiveTime.AddChangeHook(CvarChanged_Weapon);
 
-	AutoExecConfig(true, "Nyamaru_multiplayer");
+	AutoExecConfig(true, "l4d2_multiplayer_release");
 
 	RegConsoleCmd("sm_afk",				cmdGoIdle);
 	RegConsoleCmd("sm_teams",			cmdTeamPanel);
@@ -356,16 +373,18 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_info", 			cmdServerInfo);
 	RegConsoleCmd("sm_ping",			cmdPing);
 	
-	RegAdminCmd("sm_spec",				cmdJoinTeam1,		ADMFLAG_ROOT);
-	RegAdminCmd("sm_bot",				cmdBotSet,			ADMFLAG_ROOT);
+	RegAdminCmd("sm_spec",				cmdJoinTeam1,			ADMFLAG_ROOT);
+	RegAdminCmd("sm_bot",				cmdBotSet,				ADMFLAG_ROOT);
 
-	HookEvent("round_end",				Event_RoundEnd,		EventHookMode_PostNoCopy);
-	HookEvent("round_start",			Event_RoundStart,	EventHookMode_PostNoCopy);
+	HookEvent("round_end",				Event_RoundEnd,			EventHookMode_PostNoCopy);
+	HookEvent("round_start",			Event_RoundStart,		EventHookMode_PostNoCopy);
+	HookEvent("survival_round_start",	Event_SurvivalStart,	EventHookMode_Post);
 	HookEvent("player_spawn",			Event_PlayerSpawn);
-	HookEvent("player_death",			Event_PlayerDeath,	EventHookMode_Pre);
+	HookEvent("player_death",			Event_PlayerDeath,		EventHookMode_Pre);
 	HookEvent("player_team",			Event_PlayerTeam);
 	HookEvent("player_bot_replace",		Event_PlayerBotReplace);
 	HookEvent("bot_player_replace",		Event_BotPlayerReplace);
+	HookEvent("finale_start",			Event_FinaleStart, 		EventHookMode_Post);
 	HookEvent("finale_vehicle_leaving",	Event_FinaleVehicleLeaving);
 
 	if (g_bLateLoad)
@@ -411,6 +430,23 @@ Action cmdTeamPanel(int client, int args)
 		return Plugin_Handled;
 
 	DrawTeamPanel(client, false);
+	return Plugin_Handled;
+}
+
+Action Timer_SpawnExtraMedKit(Handle hTimer)
+{
+	g_hMedkitTimer = null;
+
+	int client = GetAnyAliveSurvivor();
+	int amount = GetSurvivorTeam() - 4;
+	
+	if(amount > 0 && client > 0)
+	{
+		for(int i = 1; i <= amount; i++)
+		{
+			CheatCommand(client, "give", "first_aid_kit", "");
+		}
+	}
 	return Plugin_Handled;
 }
 
@@ -938,7 +974,7 @@ Action cmdKillClient(int client, int args)
 			ForcePlayerSuicide(client);
 			char name[32];
 			GetClientName(client, name, 32);
-			PrintToChatAll("\x05[Tự Sát] \x04%s \x05vừa sử dụng !kill để tự tử.", name);
+			PrintToChatAll("\x05[Tự Sát] \x04%s \x05vừa sử dụng !kill để kết liễu bản thân.", name);
 		}
 		if (!incapacitated)
 		{
@@ -951,9 +987,18 @@ Action cmdKillClient(int client, int args)
 Action tmrBotsUpdate(Handle timer)
 {
 	g_hBotsTimer = null;
-
-	if (!PrepRestoreBots())
+	
+	if (AreAllInGame() == true && !PrepRestoreBots())
+	{
 		SpawnCheck();
+
+		if (g_hMedkitTimer == null && !g_bMedkitsGiven && g_cExtraFirstAid.BoolValue && !StrEqual(gameMode, "survival, mutation15"))
+		{
+			g_bMedkitsGiven = true;
+			g_hMedkitTimer = CreateTimer(2.0, Timer_SpawnExtraMedKit);
+		}
+	}
+	
 	else
 		g_hBotsTimer = CreateTimer(1.0, tmrBotsUpdate);
 
@@ -979,9 +1024,10 @@ public void OnMapEnd()
 
 void ResetPlugin()
 {
+	delete g_hMedkitTimer;
 	delete g_hBotsTimer;
 	g_smSteamIDs.Clear();
-	g_bRoundStart = false;
+	g_bRoundStart = false;	
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -1006,6 +1052,24 @@ void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundStart = true;
+	g_bMedkitsGiven = false;
+}
+
+void Event_SurvivalStart(Event event, const char[] name, bool dontBroadcast)
+{
+	if(g_cSurvivalExtraFirstAid.BoolValue)
+	{
+		int client = GetAnyAliveSurvivor();
+		int amount = GetSurvivorTeam() - 4;
+
+		if(amount > 0 && client > 0)
+		{
+			for(int i = 1; i <= amount; i++)
+			{
+				CheatCommand(client, "give", "first_aid_kit", "");
+			}
+		}
+	}
 }
 
 void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -1121,6 +1185,28 @@ void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 	SetEntityModel(player, model);
 }
 
+public void Event_FinaleStart(Event event, const char[] name, bool dontBroadcast)
+{
+	if(g_cFinaleExtraFirstAid.BoolValue && !StrEqual(gameMode, "survival, mutation15"))
+	{
+		int client = GetAnyAliveSurvivor();
+		int amount = GetSurvivorTeam() - 4;
+
+		if(amount > 0 && client > 0)
+		{
+			for(int i = 1; i <= amount; i++)
+			{
+				CheatCommand(client, "give", "first_aid_kit", "");
+			}
+		}
+	}
+}
+
+int GetSurvivorTeam()
+{
+	return GetTeamPlayers (TEAM_SURVIVOR, true);
+}
+
 void Event_FinaleVehicleLeaving(Event event, const char[] name, bool dontBroadcast)
 {
 	int iEnt = -1;
@@ -1152,7 +1238,8 @@ void Event_FinaleVehicleLeaving(Event event, const char[] name, bool dontBroadca
 				continue;
 
 			iEnt = CreateEntityByName("info_survivor_position");
-			if (iEnt != -1) {
+			if (iEnt != -1)
+			{
 				DispatchKeyValue(iEnt, "Order", Order[loop % 4]);
 				TeleportEntity(iEnt, vPos);
 				DispatchSpawn(iEnt);
@@ -1170,16 +1257,14 @@ void RecordSteamID(int client)
 void DisplayStatus(int client)
 {
 	int g_iClientInServer;
-	
 	int g_iHostIp;
-	
-	int maxplayers = GetMaxPlayers();
+	int g_iMaxplayers = GetMaxPlayers();
 	
 	//char g_sHostName[128];
 	char g_sServerIpHost[32];
 	char g_sServerPort[128];
 	char g_sCurrentMap[256];
-	char g_ServerTime[64];
+	char g_sServerTime[64];
 	char g_sNextmap[256];
 	
 	Handle g_hHostIp;
@@ -1194,7 +1279,7 @@ void DisplayStatus(int client)
 	GetConVarString(g_hHostPort, g_sServerPort, sizeof(g_sServerPort));
 	FormatEx(g_sServerIpHost, sizeof(g_sServerIpHost), "%u.%u.%u.%u:%s", g_iHostIp >> 24 & 255, g_iHostIp >> 16 & 255, g_iHostIp >> 8 & 255, g_iHostIp & 255, g_sServerPort);
 	GetCurrentMap(g_sCurrentMap, sizeof(g_sCurrentMap));
-	FormatTime(g_ServerTime, sizeof(g_ServerTime), NULL_STRING, -1);
+	FormatTime(g_sServerTime, sizeof(g_sServerTime), NULL_STRING, -1);
 	
 	g_hNextMap = FindConVar("sm_nextmap");
 	GetConVarString(g_hNextMap, g_sNextmap, sizeof(g_sNextmap));
@@ -1209,15 +1294,15 @@ void DisplayStatus(int client)
 	//g_hHostName = FindConVar("hostname");
 	//GetConVarString(g_hHostName, g_sHostName, sizeof(g_sHostName));
 	//PrintToChat(client, "\x04Chủ host : \x03%s", g_sHostName);
-	PrintToChat(client, "\x04Tên Bản Đồ : \x03%s", g_sCurrentMap);	
-	PrintToChat(client, "\x04Ip Máy chủ  : \x03%s", g_sServerIpHost);
-	PrintToChat(client, "\x04Local Port : \x03%s", g_sServerPort);	
+	PrintToChat(client, "\x04 Tên Bản Đồ : \x03%s", g_sCurrentMap);	
+	PrintToChat(client, "\x04 Ip Máy chủ  : \x03%s", g_sServerIpHost);
+	PrintToChat(client, "\x04 Local Port : \x03%s", g_sServerPort);	
 	if (!StrEqual(g_sNextmap, "", false))
 	{
 		PrintToChat(client, "next map: %s", g_sNextmap);
 	}
-	PrintToChat(client, "\x04Số lượng :\x03 %d/%d người", g_iClientInServer, maxplayers);
-	PrintToChat(client, "\x04Thời Gian :\x03 %s\n", g_ServerTime);
+	PrintToChat(client, "\x04Số lượng :\x03 %d/%d người", g_iClientInServer, g_iMaxplayers);
+	PrintToChat(client, "\x04Thời Gian :\x03 %s\n", g_sServerTime);
 }
 
 int GetMaxPlayers()
@@ -1248,6 +1333,18 @@ bool CacheSteamID(int client)
 
 	g_ePlayer[client].AuthId[0] = '\0';
 	return false;
+}
+
+bool AreAllInGame()
+{
+	for(int i = 1; i <= MaxClients; i++)
+	{
+		if(IsClientConnected(i) && !IsFakeClient(i))
+		{
+			if (!IsClientInGame(i)) return false;
+		}
+	}
+	return true;
 }
 
 int GetBotOfIdlePlayer(int client)
@@ -1282,6 +1379,31 @@ int GetTeamPlayers(int team, bool includeBots)
 		num++;
 	}
 	return num;
+}
+
+int GetAnyAliveSurvivor()
+{
+	for(int i = 1; i <= MaxClients; i++)
+	{
+		if(IsClientInGame(i) && !IsClientInKickQueue(i) && GetClientTeam(i) == TEAM_SURVIVOR && IsPlayerAlive(i))
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+stock int TotalSurvivors()
+{
+	int l = 0;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientConnected(i))
+		{
+			if (IsClientInGame(i) && (GetClientTeam(i) == TEAM_SURVIVOR)) l++;
+		}
+	}
+	return l;
 }
 
 bool CheckJoinLimit()
@@ -1632,13 +1754,13 @@ int GetTempHealth(int client)
 void InitData()
 {
 	char buffer[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, buffer, sizeof buffer, "gamedata/%s.txt", "Nyamaru_multiplayer");
+	BuildPath(Path_SM, buffer, sizeof buffer, "gamedata/%s.txt", "l4d2_multiplayer_release");
 	if (!FileExists(buffer))
 		SetFailState("\n==========\nMissing required file: \"%s\".\n==========", buffer);
 
-	GameData hGameData = new GameData("Nyamaru_multiplayer");
+	GameData hGameData = new GameData("l4d2_multiplayer_release");
 	if (!hGameData)
-		SetFailState("Failed to load \"%s.txt\" gamedata.", "Nyamaru_multiplayer");
+		SetFailState("Failed to load \"%s.txt\" gamedata.", "l4d2_multiplayer_release");
 
 	g_pDirector = hGameData.GetAddress("CDirector");
 	if (!g_pDirector)
@@ -2001,6 +2123,17 @@ bool ShouldIgnore(int client)
 	}
 
 	return false;
+}
+
+void CheatCommand(int client, const char[] command, const char[] argument1, const char[] argument2)
+{
+	int userFlags = GetUserFlagBits(client);
+	SetUserFlagBits(client, ADMFLAG_ROOT);
+	int flags = GetCommandFlags(command);
+	SetCommandFlags(command, flags & ~FCVAR_CHEAT);
+	FakeClientCommand(client, "%s %s %s", command, argument1, argument2);
+	SetCommandFlags(command, flags);
+	SetUserFlagBits(client, userFlags);
 }
 
 void ClearRestoreWeapons(int client)
